@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>CADisableMinimumFrameDurationOnPhone</key>
+		<true/>
+		<key>CFBundleDevelopmentRegion</key>
+		<string>$(DEVELOPMENT_LANGUAGE)</string>
+		<key>CFBundleDisplayName</key>
+		<string>Wetieko</string>
+		<key>CFBundleExecutable</key>
+		<string>$(EXECUTABLE_NAME)</string>
+		<key>CFBundleIdentifier</key>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+		<key>CFBundleInfoDictionaryVersion</key>
+		<string>6.0</string>
+		<key>CFBundleName</key>
+		<string>Wetieko</string>
+		<key>CFBundlePackageType</key>
+		<string>APPL</string>
+		<key>CFBundleShortVersionString</key>
+		<string>$(FLUTTER_BUILD_NAME)</string>
+		<key>CFBundleSignature</key>
+		<string>????</string>
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>com.googleusercontent.apps.462316609960-7tmtk6cgulonvrc5e9fhqh4b7lciedhv</string>
+				</array>
+			</dict>
+		</array>
+		<key>CFBundleVersion</key>
+		<string>$(FLUTTER_BUILD_NUMBER)</string>
+		<key>GIDClientID</key>
+		<string>462316609960-7tmtk6cgulonvrc5e9fhqh4b7lciedhv.apps.googleusercontent.com</string>
+		<key>LSRequiresIPhoneOS</key>
+		<true/>
+		<key>NSAppTransportSecurity</key>
+		<dict>
+			<key>NSAllowsArbitraryLoads</key>
+			<true/>
+		</dict>
+		<key>NSBonjourServices</key>
+		<array/>
+		<key>NSCameraUsageDescription</key>
+		<string>Profil fotoğrafı çekmek için kamera erişimine ihtiyaç var.</string>
+		<key>NSLocalNetworkUsageDescription</key>
+		<string>Bu uygulama yerel ağ bağlantısı için izin gerektirir.</string>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<string>Konumunu etkinlik ve eşleşmeleri sana özel göstermek için kullanıyoruz.</string>
+		<key>NSLocationAlwaysUsageDescription</key>
+		<string>En iyi eşleşmeleri her zaman sunabilmemiz için konum izni gerekiyor.</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>Uygulama, en iyi eşleşmeleri sunmak için konumunu kullanır.</string>
+		<key>NSPhotoLibraryAddUsageDescription</key>
+		<string>Çekilen fotoğrafları kaydetmek için fotoğraf galerisine yazma izni gerekiyor.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Profil fotoğrafı seçmek için fotoğraf galerisine erişim gerekiyor.</string>
+		<key>NSUserTrackingUsageDescription</key>
+		<string>Kullanıcı deneyimini geliştirmek için Apple ile giriş sırasında bazı bilgileri kullanıyoruz.</string>
+		<key>NSUserNotificationUsageDescription</key>
+		<string>Uygulama, mesajlar, eşleşmeler ve duyurular hakkında seni bilgilendirmek için bildirim gönderir.</string>
+		<key>UIApplicationSceneManifest</key>
+		<dict/>
+		<key>SKAdNetworkItems</key>
+		<array>
+			<dict>
+				<key>SKAdNetworkIdentifier</key>
+				<string>cstr6suwn9.skadnetwork</string>
+			</dict>
+			<dict>
+				<key>SKAdNetworkIdentifier</key>
+				<string>4fzdc2evr5.skadnetwork</string>
+			</dict>
+		</array>
+		<key>UIApplicationSupportsIndirectInputEvents</key>
+		<true/>
+		<key>UIBackgroundModes</key>
+		<array/>
+		<key>UILaunchStoryboardName</key>
+		<string>LaunchScreen</string>
+		<key>UIMainStoryboardFile</key>
+		<string>Main</string>
+		<key>UIStatusBarHidden</key>
+		<true/>
+		<key>UISupportedInterfaceOrientations</key>
+		<array>
+			<string>UIInterfaceOrientationPortrait</string>
+			<string>UIInterfaceOrientationLandscapeLeft</string>
+			<string>UIInterfaceOrientationLandscapeRight</string>
+		</array>
+		<key>UISupportedInterfaceOrientations~ipad</key>
+		<array>
+			<string>UIInterfaceOrientationPortrait</string>
+			<string>UIInterfaceOrientationPortraitUpsideDown</string>
+			<string>UIInterfaceOrientationLandscapeLeft</string>
+			<string>UIInterfaceOrientationLandscapeRight</string>
+		</array>
+		<key>UIViewControllerBasedStatusBarAppearance</key>
+		<false/>
+		<key>com.apple.developer.associated-domains</key>
+		<array>
+			<string>applinks:wetieko.com</string>
+		</array>
+		<key>io.flutter.embedded_views_preview</key>
+		<true/>
+	</dict>
+</plist>
