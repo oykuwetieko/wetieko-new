@@ -1,5 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:Wetieko/core/theme/colors.dart';
@@ -40,19 +39,17 @@ class _ProfileViewScreenState extends State<ProfileViewScreen> {
     debugPrint("🔎 viewedUserId = $viewedUserId");
     debugPrint("👤 currentUserId = $currentUserId");
 
-    // 🔥 Engel durumu kontrolü
     if (widget.externalUser != null) {
       debugPrint("🚫 Engel durumu kontrol ediliyor → ${widget.externalUser!.id}");
       context.read<RestrictionStateNotifier>().checkUserRestriction(widget.externalUser!.id);
     }
     context.read<RestrictionStateNotifier>().fetchRestrictedUsers();
 
-    // 🔥 Eğer başka birinin profiliyse
     if (widget.externalUser != null && widget.externalUser!.id != currentUserId) {
       debugPrint("👁 Profil görüntüleme kaydediliyor...");
       context.read<ProfileViewStateNotifier>().recordProfileView(viewedUserId);
 
-      debugPrint("📩 FOLLOW STATUS FETCH çağrılıyor → $viewedUserId");
+      debugPrint("📩 FOLLOW STATUS FETCH → $viewedUserId");
       followNotifier.fetchFollowStatus(viewedUserId);
 
       context.read<PlaceStateNotifier>().loadMyCheckIns(viewedUserId);
@@ -140,25 +137,28 @@ class _ProfileViewScreenState extends State<ProfileViewScreen> {
 
                 debugPrint("👉 Follow button pressed → status = $followStatus");
 
+                // 🔥 Takip isteği gönderme
                 if (followStatus == "none" || followStatus == null) {
-                  debugPrint("🚀 SEND FOLLOW REQUEST → $viewedUserId");
                   followNotifier.sendFollowRequest(viewedUserId);
-                } else if (followStatus == "pending") {
-                  debugPrint("⚠️ CANCEL FOLLOW REQUEST → $viewedUserId");
+                }
+                // 🔥 Takip isteğini iptal et
+                else if (followStatus == "pending") {
                   CustomAlert.show(
                     context,
                     title: loc.cancelFollowRequestTitle,
                     description: loc.cancelFollowRequestDescription,
                     icon: Icons.person_remove_alt_1_rounded,
-                    confirmText: loc.cancelFollowRequestTitle,
+                    confirmText: loc.cancel,
                     cancelText: loc.cancel2,
                     isDestructive: true,
                     onConfirm: () {
                       followNotifier.cancelPendingRequest(viewedUserId);
                     },
+                    onCancel: () {}, // ← 🔥 eklendi
                   );
-                } else if (followStatus == "accepted") {
-                  debugPrint("🧨 UNFOLLOW → $viewedUserId");
+                }
+                // 🔥 Takipten çık
+                else if (followStatus == "accepted") {
                   CustomAlert.show(
                     context,
                     title: loc.unfollowTitle,
@@ -170,6 +170,7 @@ class _ProfileViewScreenState extends State<ProfileViewScreen> {
                     onConfirm: () {
                       followNotifier.unfollow(viewedUserId);
                     },
+                    onCancel: () {}, // ← 🔥 eklendi
                   );
                 }
               },

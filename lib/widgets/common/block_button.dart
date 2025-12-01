@@ -27,6 +27,7 @@ class BlockButton extends StatelessWidget {
           ? null
           : () {
               if (isBlocked) {
+                /// 🔥 Kısıtlamayı KALDIR
                 CustomAlert.show(
                   context,
                   title: loc.unrestrictUserTitle,
@@ -38,8 +39,10 @@ class BlockButton extends StatelessWidget {
                   onConfirm: () {
                     notifier.unrestrictUser(userId);
                   },
+                  onCancel: () {}, // <-- İPTAL butonu için eklendi
                 );
               } else {
+                /// 🔥 Kısıtla
                 CustomAlert.show(
                   context,
                   title: loc.restrictUserTitle,
@@ -51,6 +54,7 @@ class BlockButton extends StatelessWidget {
                   onConfirm: () {
                     notifier.restrictUser(userId);
                   },
+                  onCancel: () {}, // <-- İPTAL butonu için eklendi
                 );
               }
             },

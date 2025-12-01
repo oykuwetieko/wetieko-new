@@ -63,30 +63,32 @@ class _MyConnectionScreenState extends State<MyConnectionScreen> {
   }
 
   Future<void> _confirmAndRemoveFollower(
-    BuildContext context,
-    String followerUserId,
-  ) async {
-    final loc = AppLocalizations.of(context)!;
+  BuildContext context,
+  String followerUserId,
+) async {
+  final loc = AppLocalizations.of(context)!;
 
-    CustomAlert.show(
-      context,
-      title: loc.removeFollowerTitle,
-      description: loc.removeFollowerDescription,
-      icon: Icons.person_remove_alt_1_rounded,
-      confirmText: loc.removeFollowerTitle,
-      cancelText: loc.cancel2,
-      isDestructive: true,
-      onConfirm: () async {
-        await context.read<FollowStateNotifier>().removeFollower(followerUserId);
+  CustomAlert.show(
+    context,
+    title: loc.removeFollowerTitle,
+    description: loc.removeFollowerDescription,
+    icon: Icons.person_remove_alt_1_rounded,
+    confirmText: loc.removeFollowerTitle,
+    cancelText: loc.cancel2,
+    isDestructive: true,
+    onConfirm: () async {
+      await context.read<FollowStateNotifier>().removeFollower(followerUserId);
 
-        if (!mounted) return;
+      if (!mounted) return;
 
-        await context
-            .read<FollowStateNotifier>()
-            .fetchFollowersAndFollowing(viewedUserId);
-      },
-    );
-  }
+      await context
+          .read<FollowStateNotifier>()
+          .fetchFollowersAndFollowing(viewedUserId);
+    },
+    onCancel: () {}, // 🔥 İPTAL butonu için eklendi
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
