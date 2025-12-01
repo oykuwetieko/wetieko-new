@@ -103,7 +103,7 @@ Future<void> main() async {
   await Firebase.initializeApp();
 
   // 🔥🔥🔥 FCM Notification Manager BURADA çalıştırılmalı
-  await NotificationManager().initialize(requestPermission: true);
+  //await NotificationManager().initialize(requestPermission: false);
 
   // Splash ve timezone setup
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
