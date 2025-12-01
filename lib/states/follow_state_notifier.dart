@@ -83,16 +83,33 @@ class FollowStateNotifier extends ChangeNotifier {
   }
 
   Future<void> fetchFollowersAndFollowing(String userId) async {
-    _setLoading(true);
-    try {
-      _followers = await _repo.getFollowers(userId);
-      _following = await _repo.getFollowing(userId);
-      _error = null;
-    } catch (_) {
-      _error = "Takip bilgileri yüklenemedi";
-    }
-    _setLoading(false);
+  print("📌 [fetchFollowersAndFollowing] Başladı → userId: $userId");
+
+  _setLoading(true);
+
+  try {
+    final followers = await _repo.getFollowers(userId);
+    final following = await _repo.getFollowing(userId);
+
+    print("👥 [Followers] ${followers.length} kişi");
+    print("➡️ [Following] ${following.length} kişi");
+
+    _followers = followers;
+    _following = following;
+
+    print("🔄 [State] followerCount = ${_followers.length}, followingCount = ${_following.length}");
+
+    _error = null;
+  } catch (e) {
+    print("❌ [fetchFollowersAndFollowing] HATA: $e");
+    _error = "Takip bilgileri yüklenemedi";
   }
+
+  _setLoading(false);
+
+  print("📌 [fetchFollowersAndFollowing] Bitti\n");
+}
+
 
   /// ❤️ FOLLOW REQUEST – artık bildirim GÖNDERMİYOR
   Future<void> sendFollowRequest(String userId) async {

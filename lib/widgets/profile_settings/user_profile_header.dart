@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-import 'package:Wetieko/models/place_model.dart';
-import 'package:Wetieko/models/feedback_model.dart';
 import 'package:Wetieko/widgets/common/profile_avatar.dart';
 import 'package:Wetieko/core/theme/colors.dart';
 import 'package:Wetieko/screens/05_profile_settings_screen/02_profile_edit_screen.dart';
@@ -18,9 +16,8 @@ import 'package:Wetieko/models/user_model.dart';
 import 'package:Wetieko/widgets/common/custom_alerts.dart';
 import 'package:Wetieko/states/subscription_state_notifier.dart';
 import 'package:Wetieko/widgets/premium/become_premium_badge.dart';
-import 'package:Wetieko/widgets/common/image_preview_viewer.dart'; // ✅ eklendi
+import 'package:Wetieko/widgets/common/image_preview_viewer.dart';
 
-// 🔹 Yeni importlar (yönlendirmeler için)
 import 'package:Wetieko/screens/05_profile_settings_screen/09_my_connection_screen.dart';
 import 'package:Wetieko/screens/05_profile_settings_screen/13_my_place_reviews.dart';
 
@@ -57,27 +54,19 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
   void initState() {
     super.initState();
     _fetchExternalFeedbackCountIfNeeded();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final followNotifier = context.read<FollowStateNotifier>();
-      final userId =
-          widget.externalUser?.id ?? context.read<UserStateNotifier>().state.user?.id;
-
-      if (userId != null) {
-        followNotifier.fetchFollowersAndFollowing(userId);
-      }
-    });
   }
 
   void _fetchExternalFeedbackCountIfNeeded() async {
     if (widget.externalUser != null) {
       final placeState = context.read<PlaceStateNotifier>();
-      final feedbacks = await placeState.loadFeedbacksByUser(widget.externalUser!.id);
+      final feedbacks =
+          await placeState.loadFeedbacksByUser(widget.externalUser!.id);
       setState(() => externalCommentCount = feedbacks.length);
     }
   }
 
-  Future<void> _handleProfileImageUpdate(File? file, _ProfileImageAction action) async {
+  Future<void> _handleProfileImageUpdate(
+      File? file, _ProfileImageAction action) async {
     final userNotifier = context.read<UserStateNotifier>();
     setState(() => _isLoading = true);
 
@@ -92,7 +81,8 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
       });
 
       final loc = AppLocalizations.of(context)!;
-      final String title = loc.profileImageUpdated;
+      final title = loc.profileImageUpdated;
+
       late final String message;
       switch (action) {
         case _ProfileImageAction.added:
@@ -121,8 +111,9 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
 
   void _openPhotoPickerSheet(BuildContext context) {
     final userNotifier = context.read<UserStateNotifier>();
-    final hasImageBefore = (_profileImage != null) ||
-        (userNotifier.state.user?.profileImage?.isNotEmpty == true);
+    final hasImageBefore =
+        (_profileImage != null) ||
+            (userNotifier.state.user?.profileImage?.isNotEmpty == true);
 
     showModalBottomSheet(
       context: context,
@@ -137,9 +128,10 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
             final file = await _photoManager.pickFromGallery();
             if (file != null) {
               await _handleProfileImageUpdate(
-                file,
-                hasImageBefore ? _ProfileImageAction.changed : _ProfileImageAction.added,
-              );
+                  file,
+                  hasImageBefore
+                      ? _ProfileImageAction.changed
+                      : _ProfileImageAction.added);
             }
           },
           onPickCamera: () async {
@@ -147,14 +139,16 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
             final file = await _photoManager.pickFromCamera();
             if (file != null) {
               await _handleProfileImageUpdate(
-                file,
-                hasImageBefore ? _ProfileImageAction.changed : _ProfileImageAction.added,
-              );
+                  file,
+                  hasImageBefore
+                      ? _ProfileImageAction.changed
+                      : _ProfileImageAction.added);
             }
           },
           onDelete: () async {
             Navigator.pop(context);
-            await _handleProfileImageUpdate(null, _ProfileImageAction.deleted);
+            await _handleProfileImageUpdate(
+                null, _ProfileImageAction.deleted);
           },
           onClose: () => Navigator.pop(context),
         );
@@ -164,15 +158,20 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
 
   String? _effectiveProfileImagePath(User user) {
     if (_forcePlaceholder) return null;
+
     final base = _profileImage != null
         ? _profileImage!.path
-        : (user.profileImage?.isNotEmpty == true ? user.profileImage! : null);
+        : (user.profileImage?.isNotEmpty == true
+            ? user.profileImage!
+            : null);
 
     if (base == null) return null;
+
     if (base.startsWith('http')) {
       final sep = base.contains('?') ? '&' : '?';
       return '$base${sep}v=$_imageVersion';
     }
+
     return base;
   }
 
@@ -189,26 +188,30 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
 
     final bool isOwnProfile = widget.externalUser == null;
     final bool isPremium = user.isPremium ?? subscriptionState.isPremium;
-    final userName = user.name.isNotEmpty ? user.name : 'Kullanıcı';
-    final careerStage = user.careerStage.isNotEmpty ? user.careerStage : 'Bilinmiyor';
-    final location = user.location.isNotEmpty ? user.location : 'Konum yok';
+    final userName =
+        user.name.isNotEmpty ? user.name : 'Kullanıcı';
+    final careerStage =
+        user.careerStage.isNotEmpty ? user.careerStage : 'Bilinmiyor';
+    final location =
+        user.location.isNotEmpty ? user.location : 'Konum yok';
 
     final commentCount = widget.externalUser == null
         ? placeState.myFeedbacks.length.toString()
         : (externalCommentCount?.toString() ?? '—');
 
-    final followerCount = followState.followerCount.toString();
-    final followingCount = followState.followingCount.toString();
+    final followerCount =
+        followState.followerCount.toString();
+    final followingCount =
+        followState.followingCount.toString();
 
-    final double avatarSize = 80;
-    final String? profileImagePath = _effectiveProfileImagePath(user);
+    final avatarSize = 80.0;
+    final profileImagePath = _effectiveProfileImagePath(user);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// Profil resmi + istatistikler
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -220,42 +223,32 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
                     size: avatarSize,
                     onTap: !_isLoading
                         ? () {
-                            if (widget.externalUser != null &&
-                                profileImagePath != null) {
-                              // 🔹 Başkasının profilindeyiz → popup tam ekran zoom'lu gösterim
-                              ImagePreviewViewer.show(
-                                context,
-                                [profileImagePath],
-                              );
-                            } else if (widget.avatarClickable) {
-                              // 🔹 Kendi profilin → fotoğraf düzenleme menüsü
-                              _openPhotoPickerSheet(context);
-                            }
-                          }
+                      if (widget.externalUser != null &&
+                          profileImagePath != null) {
+                        ImagePreviewViewer.show(
+                          context,
+                          [profileImagePath],
+                        );
+                      } else if (widget.avatarClickable) {
+                        _openPhotoPickerSheet(context);
+                      }
+                    }
                         : null,
                   ),
+
                   if (_isLoading)
                     Positioned.fill(
                       child: Container(
-                        width: avatarSize,
-                        height: avatarSize,
                         decoration: BoxDecoration(
+                          color: AppColors.primary.withOpacity(0.1),
                           shape: BoxShape.circle,
-                          color: AppColors.primary.withOpacity(0.12),
                         ),
                         child: const Center(
-                          child: SizedBox(
-                            width: 28,
-                            height: 28,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 3,
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(AppColors.primary),
-                            ),
-                          ),
+                          child: CircularProgressIndicator(strokeWidth: 3),
                         ),
                       ),
                     ),
+
                   if (widget.showEditButton)
                     Positioned(
                       bottom: 0,
@@ -264,14 +257,18 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (_) => const ProfileEditScreen()),
+                            MaterialPageRoute(
+                              builder: (_) => const ProfileEditScreen(),
+                            ),
                           );
                         },
                       ),
                     ),
                 ],
               ),
+
               const SizedBox(width: 24),
+
               Expanded(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -284,7 +281,8 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
                           context,
                           MaterialPageRoute(
                             builder: (_) => MyPlaceReviewsScreen(
-                              externalUserId: widget.externalUser?.id,
+                              externalUserId:
+                                  widget.externalUser?.id,
                             ),
                           ),
                         );
@@ -299,7 +297,8 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
                           MaterialPageRoute(
                             builder: (_) => MyConnectionScreen(
                               initialTabIndex: 0,
-                              externalUserId: widget.externalUser?.id,
+                              externalUserId:
+                                  widget.externalUser?.id,
                             ),
                           ),
                         );
@@ -314,7 +313,8 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
                           MaterialPageRoute(
                             builder: (_) => MyConnectionScreen(
                               initialTabIndex: 1,
-                              externalUserId: widget.externalUser?.id,
+                              externalUserId:
+                                  widget.externalUser?.id,
                             ),
                           ),
                         );
@@ -328,23 +328,25 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
 
           const SizedBox(height: 16),
 
-          /// Kullanıcı adı + Premium rozeti
           if (widget.showLabels) ...[
             Row(
               children: [
                 Text(
                   userName,
                   style: const TextStyle(
-                    fontWeight: FontWeight.w600,
                     fontSize: 16,
+                    fontWeight: FontWeight.w600,
                     color: AppColors.neutralDark,
                   ),
                 ),
                 const SizedBox(width: 6),
 
                 if (isPremium)
-                  const Icon(Icons.verified_rounded,
-                      size: 18, color: AppColors.primary)
+                  const Icon(
+                    Icons.verified_rounded,
+                    size: 18,
+                    color: AppColors.primary,
+                  )
                 else if (isOwnProfile)
                   BecomePremiumBadge(
                     onSubscribed: () async {
@@ -377,14 +379,13 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
   }) {
     return GestureDetector(
       onTap: onTap,
-      behavior: HitTestBehavior.opaque,
       child: Column(
         children: [
           Text(
             count,
             style: const TextStyle(
-              fontSize: 16,
               fontWeight: FontWeight.bold,
+              fontSize: 16,
               color: AppColors.neutralDark,
             ),
           ),

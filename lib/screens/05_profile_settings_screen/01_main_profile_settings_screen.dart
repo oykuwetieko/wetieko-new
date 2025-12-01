@@ -22,22 +22,33 @@ class MainProfileSettingsScreen extends StatefulWidget {
 
 class _MainProfileSettingsScreenState
     extends State<MainProfileSettingsScreen> {
+  bool _initialized = false;
+
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
-    Future.microtask(() async {
-      final userNotifier = context.read<UserStateNotifier>();
-      final myUserId = userNotifier.state.user?.id;
+    if (_initialized) return;
+    _initialized = true;
 
-      if (myUserId != null) {
-        await context.read<PlaceStateNotifier>().loadMyCheckIns(myUserId);
-        await context.read<PlaceStateNotifier>().loadMyFeedbacks();
-        await context
-            .read<FollowStateNotifier>()
-            .fetchFollowersAndFollowing(myUserId);
-      }
-    });
+    final user = context.read<UserStateNotifier>().state.user;
+
+    if (user != null) {
+      _loadProfileData(user.id);
+    } else {
+      context.read<UserStateNotifier>().addListener(() {
+        final u = context.read<UserStateNotifier>().state.user;
+        if (u != null) {
+          _loadProfileData(u.id);
+        }
+      });
+    }
+  }
+
+  Future<void> _loadProfileData(String userId) async {
+    await context.read<FollowStateNotifier>().fetchFollowersAndFollowing(userId);
+    await context.read<PlaceStateNotifier>().loadMyFeedbacks();
+    await context.read<PlaceStateNotifier>().loadMyCheckIns(userId);
   }
 
   @override
@@ -49,7 +60,7 @@ class _MainProfileSettingsScreenState
       appBar: CustomAppBar(
         title: loc.profileSettings,
         showStepBar: false,
-        actionWidget: const NotificationButton(), // ✅ güncellendi
+        actionWidget: const NotificationButton(),
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
