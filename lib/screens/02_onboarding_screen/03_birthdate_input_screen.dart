@@ -44,17 +44,21 @@ class _BirthdateInputScreenState extends State<BirthdateInputScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.onboardingBackground,
+
       appBar: widget.fromProfileEdit
           ? AppBar(
               backgroundColor: AppColors.onboardingBackground,
               elevation: 0,
+              automaticallyImplyLeading: false, // ✅ Geri butonu artık gelmez
             )
           : const CustomAppBar(showStepBar: false),
+
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 16, right: 16),
         child: NextButton(onPressed: _handleNext),
       ),
+
       body: Padding(
         padding: const EdgeInsets.fromLTRB(24, 30, 24, 0),
         child: Column(

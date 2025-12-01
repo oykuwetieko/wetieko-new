@@ -40,12 +40,12 @@ class _NameInputScreenState extends State<NameInputScreen> {
       context.read<UserStateNotifier>().setFullName(name);
 
       if (widget.fromProfileEdit) {
-        Navigator.pop(context); 
+        Navigator.pop(context);
       } else {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const BirthdateInputScreen(),
+            builder: (_) => const BirthdateInputScreen(),
           ),
         );
       }
@@ -60,32 +60,44 @@ class _NameInputScreenState extends State<NameInputScreen> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
 
+    // 👇 login-onboarding’deki ile birebir aynı yükseklik:
+    const double topPadding = 120;
+
+    final openedFromProfile = widget.fromProfileEdit;
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: AppColors.onboardingBackground,
-        resizeToAvoidBottomInset: true,
+
+        // 👇 Böylece içerik zıplamaz
+        resizeToAvoidBottomInset: !openedFromProfile,
+
+        // 👇 Profile Edit'ten açılınca FAB'ı kendimiz yerleştiriyoruz
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(bottom: 16, right: 16),
-          child: NextButton(onPressed: _handleNext),
-        ),
+        floatingActionButton: !openedFromProfile
+            ? Padding(
+                padding: const EdgeInsets.only(bottom: 16, right: 16),
+                child: NextButton(onPressed: _handleNext),
+              )
+            : null,
+
+        // ❌ SafeArea kaldırıldı → onboarding ile aynı görünüm
         body: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 120, 24, 0),
+              padding: EdgeInsets.fromLTRB(24, topPadding, 24, openedFromProfile ? 80 : 0),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     HeadingText(
                       title: loc.fullNameLabel,
-                      subtitle: widget.fromProfileEdit
-                          ? loc.fullNameInfo
-                          : loc.fullNameInfo,
+                      subtitle: loc.fullNameInfo,
                       align: TextAlign.left,
                     ),
                     const SizedBox(height: 16),
+
                     CustomTextField(
                       hintText: '',
                       uppercase: true,
@@ -93,29 +105,42 @@ class _NameInputScreenState extends State<NameInputScreen> {
                       focusNode: _focusNode,
                       onChanged: (value) {
                         if (value.trim().length >= 3 && _errorMessage != null) {
-                          setState(() {
-                            _errorMessage = null;
-                          });
+                          setState(() => _errorMessage = null);
                         }
                       },
                     ),
+
                     if (_errorMessage != null) ...[
                       const SizedBox(height: 8),
                       Text(
                         _errorMessage!,
-                        style: const TextStyle(color: AppColors.fabBackground, fontSize: 14),
+                        style: const TextStyle(
+                          color: AppColors.fabBackground,
+                          fontSize: 14,
+                        ),
                       ),
                     ],
+
                     const SizedBox(height: 100),
                   ],
                 ),
               ),
             ),
+
+            // 👇 CloseButton login ile birebir aynı konum
             const Positioned(
               top: 40,
-              right: 3,
+              right: 16,
               child: CloseButtonWidget(),
             ),
+
+            // 👇 Profile Edit modunda Next Button burada (VE hiç kaymaz!)
+            if (openedFromProfile)
+              Positioned(
+                bottom: 20,
+                right: 20,
+                child: NextButton(onPressed: _handleNext),
+              ),
           ],
         ),
       ),
